@@ -28,39 +28,8 @@ public class AviationDBApp {
 
     // Метод для создания таблиц
     public void createTables() throws SQLException {
-        try (Statement stmt = connection.createStatement()) {
-            // Создание таблицы ПИЛОТ
-            stmt.execute("CREATE TABLE IF NOT EXISTS ПИЛОТ (" +
-                    "ИДЕНТИФИКАТОР SERIAL PRIMARY KEY, " +
-                    "ФАМИЛИЯ TEXT NOT NULL, " +
-                    "АВИАОТРЯД TEXT NOT NULL, " +
-                    "ЛИМИТ_ЧАСОВ INT NOT NULL)");
-
-            // Создание таблицы ШТУРМАН
-            stmt.execute("CREATE TABLE IF NOT EXISTS ШТУРМАН (" +
-                    "ИДЕНТИФИКАТОР SERIAL PRIMARY KEY, " +
-                    "ФАМИЛИЯ TEXT NOT NULL, " +
-                    "АВИАОТРЯД TEXT NOT NULL, " +
-                    "ЛИМИТ_ЧАСОВ INT NOT NULL)");
-
-            // Создание таблицы РЕЙС
-            stmt.execute("CREATE TABLE IF NOT EXISTS РЕЙС (" +
-                    "ИДЕНТИФИКАТОР SERIAL PRIMARY KEY, " +
-                    "ПУНКТ_НАЗНАЧЕНИЯ TEXT NOT NULL, " +
-                    "ОБСЛ_ПЕРСОНАЛ TEXT NOT NULL, " +
-                    "ВРЕМЯ_ПОЛЕТА INT NOT NULL, " +
-                    "КОЭФФИЦИЭНТ_СЛОЖНОСТИ INT NOT NULL)");
-
-            // Создание таблицы ПОЛЕТ
-            stmt.execute("CREATE TABLE IF NOT EXISTS ПОЛЕТ (" +
-                    "НОМЕР_ЗАПИСИ SERIAL PRIMARY KEY, " +
-                    "ДАТА TEXT NOT NULL, " +
-                    "ПИЛОТ INT REFERENCES ПИЛОТ(ИДЕНТИФИКАТОР), " +
-                    "ШТУРМАН INT REFERENCES ШТУРМАН(ИДЕНТИФИКАТОР), " +
-                    "РЕЙС INT REFERENCES РЕЙС(ИДЕНТИФИКАТОР), " +
-                    "ЧИСЛО_ВЫЛЕТОВ INT NOT NULL, " +
-                    "ЧИСЛО_ЧАСОВ INT NOT NULL)");
-
+        try (CallableStatement stmt = connection.prepareCall("{call create_tables()}")) {
+            stmt.execute();
             System.out.println("Tables created successfully!");
         }
     }
@@ -161,8 +130,8 @@ public class AviationDBApp {
         try {
             // Укажите правильные параметры подключения
             String url = "jdbc:postgresql://localhost:5432/postgres";
-            String user = "your_username"; // Например, "postgres"
-            String password = "your_password"; // Ваш пароль
+            String user = "postgre"; // Например, "postgres"
+            String password = ""; // Ваш пароль
 
             AviationDBApp app = new AviationDBApp(url, user, password);
 
